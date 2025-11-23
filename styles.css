@@ -1,0 +1,237 @@
+/* =========================
+   Configurações Globais
+   ========================= */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* =========================
+   Títulos
+   ========================= */
+h1 {
+    background-color: #004d99;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 0;
+    font-size: 1.5em;
+    border-radius: 3px;
+}
+
+h2 {
+    color: #004d99;
+    padding: 10px 0;
+    border-bottom: 2px solid #ccc;
+    text-align: center;
+    width: 100%;
+}
+
+p {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #ccc;
+    margin: 30px 0;
+}
+
+/* =========================
+   Inputs
+   ========================= */
+input[type="text"],
+input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+/* =========================
+   Botões
+   ========================= */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#adicionar-periodo {
+    background-color: #4CAF50;
+    color: white;
+    display: block;
+    width: 300px;
+    margin: 20px auto;
+}
+
+#calcular-tudo {
+    background-color: #007bff;
+    color: white;
+}
+
+#limpar-tudo {
+    background-color: #dc3545;
+    color: white;
+}
+
+.limpar-periodo {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* =========================
+   Container de Períodos
+   ========================= */
+#periodos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Card de cada período */
+.periodo {
+    background-color: #f7f7ff;
+    border: 2px solid #00a0d6;
+    border-radius: 4px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    flex: 1 1 calc(50% - 10px);   /* duas colunas quando couber */
+    min-width: 260px;
+}
+
+/* Faixa de título "Período X" */
+.periodo h3 {
+    margin: 0 0 8px 0;
+    padding: 4px 8px;
+    background-color: #00a0d6;
+    color: #fff;
+    font-size: 0.95em;
+    border-radius: 3px;
+    text-align: left;
+}
+
+/* Linhas internas de campos */
+.periodo .linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+/* Grupo label + input */
+.periodo .campo {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+    flex: 1;
+}
+
+.periodo label {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-bottom: 2px;
+}
+
+.periodo input {
+    padding: 4px 6px;
+    font-size: 0.85em;
+    width: 100%;
+}
+
+/* Total em Dias com destaque leve */
+.periodo .campo-total-dias input {
+    font-weight: bold;
+}
+
+/* Área do botão "Limpar" na segunda linha */
+.periodo .acoes-periodo {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    flex: 0 0 120px;
+}
+
+.limpar-periodo {
+    height: 32px;
+    margin-left: 0;
+}
+
+/* =========================
+   Total Geral (Rodapé)
+   ========================= */
+.total-geral {
+    border-top: 3px solid #004d99;
+    background-color: #e6f0ff;
+    padding: 20px 10px;
+    margin-top: 20px;
+}
+
+.campos-total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.campos-total label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.campos-total input[readonly] {
+    background-color: #dddddd;
+    border: 2px solid #aaa;
+    width: 80px;
+}
+
+#total-geral-dias {
+    width: 120px;
+}
+
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 900px) {
+    .periodo {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .campos-total {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campos-total input,
+    .campos-total button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #adicionar-periodo {
+        width: 100%;
+    }
+}

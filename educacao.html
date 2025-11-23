@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educação Previdenciária - SISPREV</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: #2b7f3b; /* verde */
+      color: #fff;
+    }
+
+    .top-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .top-bar a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 12px;
+    }
+
+    .logo-menu {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 16px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 24px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== BREADCRUMB ===== */
+    .breadcrumb {
+      background: #eaeaea;
+      font-size: 13px;
+    }
+
+    .breadcrumb-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 16px;
+    }
+
+    .breadcrumb a {
+      color: #2b7f3b;
+      text-decoration: none;
+    }
+
+    /* ===== LAYOUT PRINCIPAL ===== */
+    main {
+      max-width: 1200px;
+      margin: 16px auto 40px;
+      padding: 0 16px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .content {
+      flex: 2;
+      background: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sidebar-box {
+      background: #fff;
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      font-size: 14px;
+    }
+
+    .sidebar-box h3 {
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: #2b7f3b;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 4px;
+    }
+
+    .sidebar-box ul {
+      list-style: none;
+      margin-top: 6px;
+    }
+
+    .sidebar-box li {
+      margin-bottom: 6px;
+    }
+
+    .sidebar-box a {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .sidebar-box a:hover {
+      text-decoration: underline;
+      color: #2b7f3b;
+    }
+
+    /* ===== CONTEÚDO PRINCIPAL ===== */
+    .content h1 {
+      font-size: 22px;
+      margin-bottom: 4px;
+      color: #2b7f3b;
+    }
+
+    .content h2 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .content-section {
+      margin-top: 20px;
+    }
+
+    .content-section h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #2b7f3b;
+    }
+
+    .content-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .content-section li {
+      margin-bottom: 4px;
+    }
+
+    .content-section a {
+      color: #0066cc;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .content-section a:hover {
+      text-decoration: underline;
+    }
+
+    .last-update {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    /* ===== RODAPÉ ===== */
+    footer {
+      background: #2b7f3b;
+      color: #fff;
+      font-size: 13px;
+      padding: 16px 0;
+      margin-top: 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPO -->
+  <header>
+    <div class="top-bar">
+      <div>Portal da Transparência | Serviços | Ouvidoria</div>
+      <div>
+        <a href="#">Imprensa</a>
+        <a href="#">Contato</a>
+      </div>
+    </div>
+
+    <div class="logo-menu">
+      <div class="logo">SISPREV - Instituto de Previdência</div>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Institucional</a></li>
+          <li><a href="#">Informações ao Segurado</a></li>
+          <li><a href="#">Investimentos</a></li>
+          <li><a href="#">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="#">Home</a> / <a href="#">Informações ao Segurado</a> / Educação Previdenciária
+    </div>
+  </div>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main>
+    <!-- COLUNA ESQUERDA -->
+    <section class="content">
+      <h1>Informações ao Segurado</h1>
+      <h2>Educação Previdenciária</h2>
+
+      <div class="content-section">
+        <h3>Programa “SISPREV vai até você”</h3>
+        <ul>
+          <li><a href="#">Relatório do Programa 2025</a></li>
+          <li><a href="#">Relatório do Programa 2024</a></li>
+          <li><a href="#">Relatório do Programa 2023</a></li>
+        </ul>
+      </div>
+
+      <div class="content-section">
+        <h3>Prestação de Contas de Educação Previdenciária</h3>
+        <ul>
+          <li><a href="#">Prestação de Contas 2024</a></li>
+          <li><a href="#">Prestação de Contas 2023</a></li>
+        </ul>
+      </div>
+
+      <div class="content-section">
+        <h3>Treinamento e Capacitação</h3>
+        <p>Servidores e dirigentes do SISPREV.</p>
+        <p class="last-update">Última atualização: 17 de julho de 2025</p>
+      </div>
+
+      <div class="content-section">
+        <h3>Programas de Integração</h3>
+        <ul>
+          <li><a href="#">Programa de integração com novos servidores 2025</a></li>
+          <li><a href="#">Programa de integração com novos servidores 2024</a></li>
+          <li><a href="#">Programa de integração com novos servidores 2023</a></li>
+        </ul>
+      </div>
+
+      <div class="content-section">
+        <h3>Programa de Educação Previdenciária</h3>
+        <ul>
+          <li><a href="#">Programa 2025</a></li>
+          <li><a href="#">Programa 2024</a></li>
+          <li><a href="#">Programa 2023</a></li>
+          <li><a href="#">Programa 2022</a></li>
+          <li><a href="#">Programa 2021</a></li>
+          <li><a href="#">Programa 2020</a></li>
+          <li><a href="#">Programa 2019</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- SIDEBAR (COLUNA DIREITA) -->
+    <aside class="sidebar">
+
+      <div class="sidebar-box">
+        <h3>Informações ao Segurado</h3>
+        <ul>
+          <li><a href="#">Cartilha de Benefícios</a></li>
+          <li><a href="#">Cartilha Financeira</a></li>
+          <li><a href="#">Dúvidas Frequentes</a></li>
+          <li><a href="#">Educação Previdenciária</a></li>
+          <li><a href="calculdoradetempos.html">Calculdora de tempos</a></li>
+          <li><a href="#">Holerite</a></li>
+          <li><a href="#">Informes de Rendimentos</a></li>
+          <li><a href="#">Programa de Pré-Aposentadoria</a></li>
+          <li><a href="#">Censo Previdenciário</a></li>
+          <li><a href="#">Validação de Documentos</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>Últimas Notícias</h3>
+        <ul>
+          <li><a href="#">Notícia 1 sobre ações de educação previdenciária</a></li>
+          <li><a href="#">Notícia 2 sobre eventos com segurados</a></li>
+          <li><a href="#">Notícia 3 sobre programas de bem-estar</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-box">
+        <h3>Acesso Rápido</h3>
+        <ul>
+          <li><a href="#">Conselhos e Comitês</a></li>
+          <li><a href="#">Holerite</a></li>
+          <li><a href="#">Calendário de Pagamentos</a></li>
+          <li><a href="#">Legislação e Concursos</a></li>
+          <li><a href="#">Ouvidoria</a></li>
+        </ul>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <strong>Horário de atendimento</strong><br>
+        Segunda a sexta, das 08h às 17h
+      </div>
+      <div>
+        <strong>Contatos</strong><br>
+        Telefone: (00) 0000-0000<br>
+        E-mail: contato@sisprev.to.gov.br
+      </div>
+      <div>
+        <strong>Endereço</strong><br>
+        Rua Exemplo, 123 – Centro<br>
+        Teófilo Otoni / MG – CEP 00000-000
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

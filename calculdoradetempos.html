@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Tempos Escalável</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>CALCULADORA DE TEMPOS</h1>
+        <p>Preencha: Data Inicial e Data Final</p>
+
+        <div id="periodos-container">
+        </div>
+
+        <button id="adicionar-periodo">➕ Adicionar Novo Período</button>
+
+        <hr>
+
+        <div class="total-geral">
+            <h2>Total Geral</h2>
+            <div class="campos-total">
+              
+
+                <label>Ano</label>
+                <input type="text" id="total-anos" readonly>
+
+                <label>Mês</label>
+                <input type="text" id="total-meses" readonly>
+
+                <label>Dia</label>
+                <input type="text" id="total-dias" readonly>
+
+                <label>Total Geral de Dias</label>
+                <input type="text" id="total-geral-dias" readonly>
+
+                <button id="calcular-tudo">Calcular</button>
+                <button id="limpar-tudo">Limpar Tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

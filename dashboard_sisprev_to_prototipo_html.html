@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel de Transparência – SISPREV‑TO (Protótipo)</title>
+  <style>
+    :root {
+      --bg: #0f172a;         /* slate-900 */
+      --panel: #111827;      /* gray-900 */
+      --muted: #94a3b8;      /* slate-400 */
+      --text: #e5e7eb;       /* gray-200 */
+      --accent: #22c55e;     /* green-500 */
+      --accent-2: #60a5fa;   /* blue-400 */
+      --accent-3: #f59e0b;   /* amber-500 */
+      --accent-4: #ef4444;   /* red-500 */
+      --card: #0b1220;       /* deep panel */
+      --card-2: #0c1426;
+      --border: #1f2937;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#060a18);color:var(--text);font:14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji"}
+    a{color:var(--accent-2);text-decoration:none}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .logo{width:40px;height:40px;border-radius:10px;background:radial-gradient(60% 60% at 50% 40%, #2dd4bf, #0ea5e9 60%, #1e40af)}
+    .brand h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);margin-top:2px;font-size:12px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{border:1px solid var(--border);padding:8px 12px;border-radius:999px;background:rgba(255,255,255,0.03);cursor:pointer}
+    .tab[aria-selected="true"]{background:linear-gradient(180deg,#0b1224,#0b132a);border-color:#263042}
+
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .card{background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--border);border-radius:16px;padding:16px}
+    .kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+    .kpi{padding:16px;border-radius:14px;background:linear-gradient(180deg,#0b1222,#0b162e);border:1px solid var(--border)}
+    .kpi h3{margin:0 0 8px 0;font-weight:600;font-size:12px;color:var(--muted)}
+    .kpi .value{font-size:22px;font-weight:700}
+    .kpi .delta{font-size:12px;color:#86efac}
+    .row{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .col-8{grid-column:span 8}
+    .col-4{grid-column:span 4}
+    .col-6{grid-column:span 6}
+    @media (max-width: 1024px){.kpis{grid-template-columns:repeat(3,1fr)}.col-8,.col-6,.col-4{grid-column:1/-1}}
+
+    /* Simple sparkline & charts */
+    .spark{height:64px;width:100%}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .muted{color:var(--muted)}
+    .btns{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03)}
+    .list{display:grid;gap:8px}
+    .list a{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:rgba(255,255,255,0.02)}
+
+    footer{margin-top:28px;padding:16px 0;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+
+    /* simple tabs */
+    [data-panel]{display:none}
+    [data-panel].active{display:block}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Painel de Transparência – SISPREV‑TO</h1>
+          <div class="sub">Acompanhe em tempo real os resultados e indicadores do Instituto de Previdência dos Servidores Públicos Municipais de Teófilo Otoni.</div>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="Seções do painel">
+        <button class="tab" role="tab" aria-selected="true" data-tab="invest">Investimentos</button>
+        <button class="tab" role="tab" data-tab="benef">Benefícios</button>
+        <button class="tab" role="tab" data-tab="pessoas">Servidores</button>
+        <button class="tab" role="tab" data-tab="relat">Relatórios</button>
+        <button class="tab" role="tab" data-tab="contato">Contato / Ouvidoria</button>
+      </nav>
+    </header>
+
+    <!-- KPIs (cards resumidos) -->
+    <section class="kpis card" aria-label="Indicadores principais">
+      <div class="kpi"><h3>Servidores Ativos</h3><div class="value">1.200</div><div class="delta">▲ 2% no ano</div></div>
+      <div class="kpi"><h3>Aposentados</h3><div class="value">300</div><div class="delta">▲ 1% no ano</div></div>
+      <div class="kpi"><h3>Pensionistas</h3><div class="value">150</div><div class="delta">—</div></div>
+      <div class="kpi"><h3>Patrimônio Total</h3><div class="value">R$ 45.000.000</div><div class="delta">▲ 3,2% 12m</div></div>
+      <div class="kpi"><h3>Rentabilidade (12m)</h3><div class="value">12,5% a.a.</div><div class="delta">✅ Meta atingida</div></div>
+      <div class="kpi"><h3>Benefícios Pagos (mês)</h3><div class="value">R$ 720.000</div><div class="delta">—</div></div>
+    </section>
+
+    <!-- Painel: Investimentos -->
+    <section class="row" data-panel id="panel-invest">
+      <div class="card col-8">
+        <h3>Evolução do Patrimônio (últimos 12 meses)</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Gráfico de linha – patrimônio">
+          <defs>
+            <linearGradient id="grad1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#60a5fa" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+          <!-- area fill -->
+          <path d="M0,120 L50,110 L100,100 L150,98 L200,94 L250,90 L300,85 L350,80 L400,75 L450,70 L500,66 L550,60 L600,55 L600,160 L0,160 Z" fill="url(#grad1)"/>
+          <!-- line -->
+          <polyline fill="none" stroke="#60a5fa" stroke-width="3" points="0,120 50,110 100,100 150,98 200,94 250,90 300,85 350,80 400,75 450,70 500,66 550,60 600,55"/>
+        </svg>
+        <div class="legend">
+          <span class="muted">Base: R$ 43,6 mi → R$ 45,0 mi</span>
+        </div>
+      </div>
+      <div class="card col-4">
+        <h3>Composição da Carteira</h3>
+        <svg viewBox="0 0 160 160" width="100%" aria-label="Gráfico de rosca – composição">
+          <circle cx="80" cy="80" r="60" stroke="#1f2937" stroke-width="24" fill="none"/>
+          <!-- 60% Renda Fixa -->
+          <circle cx="80" cy="80" r="60" stroke="#22c55e" stroke-width="24" fill="none" stroke-dasharray="377" stroke-dashoffset="151" transform="rotate(-90 80 80)"/>
+          <!-- 25% Fundos -->
+          <circle cx="80" cy="80" r="60" stroke="#60a5fa" stroke-width="24" fill="none" stroke-dasharray="157" stroke-dashoffset="-26" transform="rotate(-90 80 80)"/>
+          <!-- 10% Tesouro -->
+          <circle cx="80" cy="80" r="60" stroke="#f59e0b" stroke-width="24" fill="none" stroke-dasharray="62.8" stroke-dashoffset="-183" transform="rotate(-90 80 80)"/>
+          <!-- 5% Caixa -->
+          <circle cx="80" cy="80" r="60" stroke="#ef4444" stroke-width="24" fill="none" stroke-dasharray="31.4" stroke-dashoffset="-214" transform="rotate(-90 80 80)"/>
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:#22c55e"></span> Renda Fixa (60%)</span>
+          <span><span class="dot" style="background:#60a5fa"></span> Fundos (25%)</span>
+          <span><span class="dot" style="background:#f59e0b"></span> Tesouro (10%)</span>
+          <span><span class="dot" style="background:#ef4444"></span> Caixa (5%)</span>
+        </div>
+      </div>
+      <div class="card col-6">
+        <h3>Rentabilidade Mensal (últimos 6 meses)</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Barras – rentabilidade">
+          <g fill="#22c55e">
+            <rect x="10" y="100" width="70" height="50" rx="6"/>
+            <rect x="100" y="85" width="70" height="65" rx="6"/>
+            <rect x="190" y="70" width="70" height="80" rx="6"/>
+            <rect x="280" y="60" width="70" height="90" rx="6"/>
+            <rect x="370" y="78" width="70" height="72" rx="6"/>
+            <rect x="460" y="55" width="70" height="95" rx="6"/>
+          </g>
+        </svg>
+        <div class="muted">Meta: CDI; Benchmark: IPCA + 4% a.a.</div>
+      </div>
+      <div class="card col-6">
+        <h3>Risco x Retorno (simples)</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Dispersão – risco e retorno">
+          <line x1="40" y1="10" x2="40" y2="150" stroke="#263042" />
+          <line x1="40" y1="150" x2="580" y2="150" stroke="#263042" />
+          <circle cx="120" cy="120" r="6" fill="#60a5fa" />
+          <circle cx="220" cy="100" r="6" fill="#22c55e" />
+          <circle cx="320" cy="90" r="6" fill="#f59e0b" />
+          <circle cx="460" cy="60" r="6" fill="#ef4444" />
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:#60a5fa"></span> Fundos</span>
+          <span><span class="dot" style="background:#22c55e"></span> Renda Fixa</span>
+          <span><span class="dot" style="background:#f59e0b"></span> Tesouro</span>
+          <span><span class="dot" style="background:#ef4444"></span> Caixa</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel: Benefícios -->
+    <section class="row" data-panel id="panel-benef">
+      <div class="card col-6">
+        <h3>Benefícios pagos (últimos 6 meses)</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Colunas – benefícios">
+          <g fill="#60a5fa">
+            <rect x="10" y="80" width="70" height="70" rx="6"/>
+            <rect x="110" y="95" width="70" height="55" rx="6"/>
+            <rect x="210" y="85" width="70" height="65" rx="6"/>
+            <rect x="310" y="70" width="70" height="80" rx="6"/>
+            <rect x="410" y="60" width="70" height="90" rx="6"/>
+            <rect x="510" y="72" width="70" height="78" rx="6"/>
+          </g>
+        </svg>
+        <div class="muted">Valores nominais – R$ mil</div>
+      </div>
+      <div class="card col-6">
+        <h3>Tempo médio de concessão</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Linha – tempo médio">
+          <polyline fill="none" stroke="#22c55e" stroke-width="3" points="10,120 110,115 210,110 310,100 410,92 510,88"/>
+        </svg>
+        <div class="muted">Meta: reduzir para ≤ 30 dias</div>
+      </div>
+      <div class="card col-12">
+        <h3>Indicadores de atendimento</h3>
+        <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+          <div class="kpi"><h3>Protocolos no mês</h3><div class="value">182</div><div class="delta">▲ 5%</div></div>
+          <div class="kpi"><h3>Tempo médio (dias)</h3><div class="value">34</div><div class="delta">▼ melhorou</div></div>
+          <div class="kpi"><h3>Satisfação (NPS)</h3><div class="value">81</div><div class="delta">👍 Excelente</div></div>
+          <div class="kpi"><h3>Reclamações resolvidas</h3><div class="value">96%</div><div class="delta">nos últimos 30 dias</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel: Servidores -->
+    <section class="row" data-panel id="panel-pessoas">
+      <div class="card col-6">
+        <h3>Distribuição de segurados</h3>
+        <svg class="spark" viewBox="0 0 600 160" aria-label="Barras – distribuição">
+          <g fill="#f59e0b">
+            <rect x="40" y="30" width="120" height="110" rx="6"/>
+          </g>
+          <g fill="#22c55e">
+            <rect x="240" y="55" width="120" height="85" rx="6"/>
+          </g>
+          <g fill="#60a5fa">
+            <rect x="440" y="80" width="120" height="60" rx="6"/>
+          </g>
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:#f59e0b"></span> Ativos (1.200)</span>
+          <span><span class="dot" style="background:#22c55e"></span> Aposentados (300)</span>
+          <span><span class="dot" style="background:#60a5fa"></span> Pensionistas (150)</span>
+        </div>
+      </div>
+      <div class="card col-6">
+        <h3>Capacitações e Certificações</h3>
+        <div class="list">
+          <a href="#"><span>CPA‑20 – Analistas de Investimento</span><span class="muted">Atualização: 2025</span></a>
+          <a href="#"><span>CRC Ativo – Contabilidade</span><span class="muted">Válido</span></a>
+          <a href="#"><span>LGPD – Encarregado de Dados</span><span class="muted">Concluído</span></a>
+          <a href="#"><span>Gestão Previdenciária – Pró‑Gestão</span><span class="muted">Nível III</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel: Relatórios e Documentos -->
+    <section class="row" data-panel id="panel-relat">
+      <div class="card col-12">
+        <h3>Relatórios e Demonstrativos (download)</h3>
+        <div class="btns">
+          <a class="btn" href="#">Relatório de Governança (Trimestral)</a>
+          <a class="btn" href="#">Demonstrativo de Investimentos (Mês)</a>
+          <a class="btn" href="#">Parecer Atuarial</a>
+          <a class="btn" href="#">Atas dos Conselhos</a>
+          <a class="btn" href="#">Prestação de Contas</a>
+        </div>
+        <p class="muted" style="margin-top:10px">*Substitua os links pelos PDFs/planilhas oficiais do Instituto.</p>
+      </div>
+    </section>
+
+    <!-- Painel: Contato / Ouvidoria -->
+    <section class="row" data-panel id="panel-contato">
+      <div class="card col-6">
+        <h3>Fale com o SISPREV‑TO</h3>
+        <p class="muted">Canal direto de comunicação com servidores, aposentados e pensionistas.</p>
+        <form class="list" onsubmit="event.preventDefault(); alert('Mensagem enviada! (protótipo)');">
+          <input aria-label="Nome" placeholder="Seu nome" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:#0a1220;color:var(--text)" />
+          <input aria-label="E-mail" placeholder="Seu e‑mail" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:#0a1220;color:var(--text)" />
+          <textarea aria-label="Mensagem" placeholder="Mensagem" rows="5" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:#0a1220;color:var(--text)"></textarea>
+          <button class="btn" type="submit">Enviar</button>
+        </form>
+      </div>
+      <div class="card col-6">
+        <h3>Canais oficiais</h3>
+        <div class="list">
+          <a href="#"><span>Ouvidoria (Fala.BR)</span><span class="muted">Protocole sua manifestação</span></a>
+          <a href="#"><span>WhatsApp de Atendimento</span><span class="muted">(QR Code no site)</span></a>
+          <a href="#"><span>E-mail Institucional</span><span class="muted">contato@sisprev‑to.gov.br</span></a>
+          <a href="#"><span>Transparência</span><span class="muted">Acesso à Informação</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      "A transparência é a base da confiança." – SISPREV‑TO · Instituto de Previdência dos Servidores Públicos Municipais de Teófilo Otoni.
+    </footer>
+  </div>
+
+  <script>
+    // Troca simples de abas (sem dependências)
+    const tabs = document.querySelectorAll('.tab');
+    const panels = {
+      invest: document.getElementById('panel-invest'),
+      benef: document.getElementById('panel-benef'),
+      pessoas: document.getElementById('panel-pessoas'),
+      relat: document.getElementById('panel-relat'),
+      contato: document.getElementById('panel-contato')
+    };
+    function activate(key){
+      tabs.forEach(t=>t.setAttribute('aria-selected', String(t.dataset.tab===key)));
+      Object.values(panels).forEach(p=>p.classList.remove('active'));
+      panels[key].classList.add('active');
+    }
+    tabs.forEach(t=>t.addEventListener('click',()=>activate(t.dataset.tab)));
+    // Ativa o painel inicial
+    activate('invest');
+  </script>
+</body>
+</html>
