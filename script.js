@@ -1,4 +1,6 @@
-// Este é o bloco que o JavaScript irá gerar
+// ----------------------------
+// Criação dinâmica dos períodos
+// ----------------------------
 function createPeriodoElement(indice) {
     const html = `
         <div class="periodo" data-index="${indice}">
@@ -33,20 +35,17 @@ function createPeriodoElement(indice) {
                     <input type="text" class="periodo-total-dias" readonly>
                 </div>
                 <div class="acoes-periodo">
-                    <button class="limpar-periodo">Limpar</button>
+                    <button type="button" class="limpar-periodo">Limpar</button>
                 </div>
             </div>
         </div>
     `;
-    // resto igual...
-
-    
 
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html.trim();
     const elemento = tempDiv.firstChild;
 
-    // Evento do botão "Limpar" deste período
+    // Botão "Limpar" deste período
     const btnLimpar = elemento.querySelector('.limpar-periodo');
     btnLimpar.addEventListener('click', () => {
         elemento.querySelector('.data-inicial').value = '';
@@ -55,6 +54,7 @@ function createPeriodoElement(indice) {
         elemento.querySelector('.periodo-mes').value = '';
         elemento.querySelector('.periodo-dia').value = '';
         elemento.querySelector('.periodo-total-dias').value = '';
+        calcularTotalGeral();
     });
 
     return elemento;
@@ -64,15 +64,7 @@ let periodoCount = 1;
 const periodosContainer = document.getElementById('periodos-container');
 const adicionarBotao = document.getElementById('adicionar-periodo');
 
-// Recalcular sempre que mudar uma data
-periodosContainer.addEventListener('change', (e) => {
-    if (e.target.classList.contains('data-inicial') ||
-        e.target.classList.contains('data-final')) {
-        calcularTotalGeral();
-    }
-});
-
-
+// Inicializa com 3 períodos
 function initialize() {
     for (let i = 1; i <= 3; i++) {
         periodosContainer.appendChild(createPeriodoElement(i));
@@ -80,23 +72,28 @@ function initialize() {
     }
 }
 
-// Adicionar novas linhas ao clicar em "Adicionar Novo Período"
+// Adicionar novos períodos
 adicionarBotao.addEventListener('click', () => {
     periodosContainer.appendChild(createPeriodoElement(periodoCount));
     periodoCount++;
 });
 
-// Cálculo
-
+// ----------------------------------------
+// Cálculo de dias e conversão 360/30
+// ----------------------------------------
 function calcularDiferencaEmDias(dataInicio, dataFim) {
-    const start = new Date(dataInicio);
-    const end = new Date(dataFim);
+    // garante horário fixo pra evitar problema de fuso
+    const start = new Date(dataInicio + 'T00:00:00');
+    const end   = new Date(dataFim   + 'T00:00:00');
 
-    // Inclui o último dia (regra tipo INSS)
-    const endAjustado = new Date(end.getTime() + (1000 * 60 * 60 * 24));
+    // se a data final for antes da inicial, ignora
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
+        return 0;
+    }
 
-    const diffTime = Math.abs(endAjustado - start);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = end - start;
+    // sem +1 dia, pra bater com o sistema de referência
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
     return diffDays;
 }
@@ -114,29 +111,38 @@ function converterDiasParaAnosMesesDias(totalDays) {
     return { anos, meses, dias };
 }
 
+// ----------------------------------------
+// Cálculo geral e atualização da tela
+// ----------------------------------------
 function calcularTotalGeral() {
     let totalGeralDias = 0;
     const periodos = document.querySelectorAll('.periodo');
 
     periodos.forEach(periodo => {
         const dataInicial = periodo.querySelector('.data-inicial').value;
-        const dataFinal = periodo.querySelector('.data-final').value;
+        const dataFinal   = periodo.querySelector('.data-final').value;
 
         if (dataInicial && dataFinal) {
             const dias = calcularDiferencaEmDias(dataInicial, dataFinal);
 
-            // Atualiza total em dias do período
-            periodo.querySelector('.periodo-total-dias').value = dias;
+            // Atualiza total de dias do período
+            periodo.querySelector('.periodo-total-dias').value = dias || '';
 
-            // Converte e preenche Ano/Mês/Dia do período
-            const { anos, meses, dias: diasPeriodo } = converterDiasParaAnosMesesDias(dias);
-            periodo.querySelector('.periodo-ano').value = anos;
-            periodo.querySelector('.periodo-mes').value = meses;
-            periodo.querySelector('.periodo-dia').value = diasPeriodo;
+            // Converte para Ano/Mês/Dia (360/30)
+            if (dias > 0) {
+                const { anos, meses, dias: diasPeriodo } = converterDiasParaAnosMesesDias(dias);
+                periodo.querySelector('.periodo-ano').value = anos;
+                periodo.querySelector('.periodo-mes').value = meses;
+                periodo.querySelector('.periodo-dia').value = diasPeriodo;
+            } else {
+                periodo.querySelector('.periodo-ano').value = '';
+                periodo.querySelector('.periodo-mes').value = '';
+                periodo.querySelector('.periodo-dia').value = '';
+            }
 
             totalGeralDias += dias;
         } else {
-            // Se faltar data, limpa os resultados desse período
+            // Se faltar data, limpa os resultados do período
             periodo.querySelector('.periodo-total-dias').value = '';
             periodo.querySelector('.periodo-ano').value = '';
             periodo.querySelector('.periodo-mes').value = '';
@@ -145,17 +151,32 @@ function calcularTotalGeral() {
     });
 
     // Converte total geral
-    const { anos, meses, dias } = converterDiasParaAnosMesesDias(totalGeralDias);
-
-    document.getElementById('total-geral-dias').value = totalGeralDias || '';
-    document.getElementById('total-anos').value = totalGeralDias ? anos : '';
-    document.getElementById('total-meses').value = totalGeralDias ? meses : '';
-    document.getElementById('total-dias').value = totalGeralDias ? dias : '';
+    if (totalGeralDias > 0) {
+        const { anos, meses, dias } = converterDiasParaAnosMesesDias(totalGeralDias);
+        document.getElementById('total-geral-dias').value = totalGeralDias;
+        document.getElementById('total-anos').value = anos;
+        document.getElementById('total-meses').value = meses;
+        document.getElementById('total-dias').value = dias;
+    } else {
+        document.getElementById('total-geral-dias').value = '';
+        document.getElementById('total-anos').value = '';
+        document.getElementById('total-meses').value = '';
+        document.getElementById('total-dias').value = '';
+    }
 }
 
+// Botão "Calcular"
 document.getElementById('calcular-tudo').addEventListener('click', calcularTotalGeral);
 
-// Opcional: limpar tudo
+// Recalcular automaticamente ao mudar datas
+periodosContainer.addEventListener('change', (e) => {
+    if (e.target.classList.contains('data-inicial') ||
+        e.target.classList.contains('data-final')) {
+        calcularTotalGeral();
+    }
+});
+
+// Botão "Limpar Tudo"
 document.getElementById('limpar-tudo').addEventListener('click', () => {
     const periodos = document.querySelectorAll('.periodo');
     periodos.forEach(periodo => {
@@ -175,5 +196,6 @@ document.getElementById('limpar-tudo').addEventListener('click', () => {
     document.getElementById('total-dias').value = '';
 });
 
-// Inicializa a calculadora com 3 períodos
+// Inicializa a calculadora
 initialize();
+
