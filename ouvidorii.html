@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ouvidoria do SISPREV-TO (teste)</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7f9;margin:0;padding:24px}
+    .card{max-width:900px;margin:0 auto;background:#fff;border:1px solid #e6e8eb;border-radius:16px;padding:24px}
+    h2{margin:0 0 6px}
+    .intro{color:#4b5563;margin:0 0 16px}
+    .field{margin-bottom:14px} label{display:block;font-weight:600;margin-bottom:6px}
+    input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;background:#fff}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:760px){.grid-2{grid-template-columns:1fr}}
+    fieldset{border:1px dashed #e5e7eb;border-radius:12px;padding:16px}
+    legend{font-weight:700}
+    .hint{display:block;margin-top:6px;color:#6b7280;font-size:.9rem}
+    .actions{display:flex;gap:10px;margin-top:6px}
+    .btn{border:1px solid #d1d5db;background:#f9fafb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    .primary{background:#0ea5e9;border-color:#0ea5e9;color:#fff}
+    .msg{margin-top:10px;padding:10px;border-radius:10px;display:none}
+    .ok{background:#ecfdf5;border:1px solid #10b981;color:#065f46}
+    .err{background:#fef2f2;border:1px solid #ef4444;color:#7f1d1d}
+    /* honeypot invisível */
+    .hp{position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <form id="form" action="enviar.php" method="POST" enctype="multipart/form-data" novalidate>
+      <h2>Ouvidoria do SISPREV-TO</h2>
+      <p class="intro">Use este canal para registrar <strong>reclamações</strong>, <strong>sugestões</strong>, <strong>elogios</strong>, <strong>denúncias</strong>, <strong>solicitações</strong> ou <strong>pedidos de acesso à informação</strong>. Campos marcados com * são obrigatórios.</p>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="tipo">Tipo de manifestação *</label>
+          <select id="tipo" name="tipo" required>
+            <option value="">Selecione</option>
+            <option>Reclamação</option><option>Elogio</option><option>Sugestão</option>
+            <option>Denúncia</option><option>Solicitação</option>
+            <option>Pedido de Acesso à Informação (LAI)</option>
+          </select>
+          <small class="hint">Escolha a categoria que melhor descreve sua manifestação.</small>
+        </div>
+
+        <div class="field">
+          <label for="setor">Setor relacionado</label>
+          <select id="setor" name="setor">
+            <option value="">Selecione (opcional)</option>
+            <option>Benefícios</option><option>Financeiro</option><option>Atendimento</option>
+            <option>TI</option><option>Diretoria</option><option>Outros</option>
+          </select>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Identificação do manifestante</legend>
+        <div class="field">
+          <span>Deseja se identificar? *</span><br>
+          <label><input type="radio" name="identificacao" value="sim" checked> Sim</label>
+          <label style="margin-left:12px"><input type="radio" name="identificacao" value="nao"> Não (anônimo)</label>
+        </div>
+
+        <div class="grid-2" id="bloco-ident">
+          <div class="field">
+            <label for="nome">Nome completo *</label>
+            <input id="nome" name="nome" type="text" placeholder="Seu nome">
+          </div>
+          <div class="field">
+            <label for="cpfmat">CPF ou Matrícula (opcional)</label>
+            <input id="cpfmat" name="cpfmat" type="text" placeholder="000.000.000-00 ou 12345">
+          </div>
+          <div class="field">
+            <label for="email">E-mail *</label>
+            <input id="email" name="email" type="email" placeholder="seuemail@exemplo.com">
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone (opcional)</label>
+            <input id="telefone" name="telefone" type="tel" placeholder="(00) 00000-0000">
+          </div>
+        </div>
+        <small class="hint">Se optar por anonimato, não conseguiremos enviar retorno individual.</small>
+      </fieldset>
+
+      <div class="field">
+        <label for="assunto">Assunto *</label>
+        <input id="assunto" name="assunto" type="text" placeholder="Título breve" required>
+      </div>
+
+      <div class="field">
+        <label for="descricao">Descrição detalhada *</label>
+        <textarea id="descricao" name="descricao" rows="6" placeholder="Descreva os fatos de forma objetiva..." required></textarea>
+      </div>
+
+      <div class="field">
+        <label for="anexos">Anexos (opcional)</label>
+        <input id="anexos" name="anexos[]" type="file" multiple>
+        <small class="hint">Tamanho máx. total 10MB. Tipos: pdf, jpg, jpeg, png, doc, docx, odt.</small>
+      </div>
+
+      <div class="field">
+        <label><input type="checkbox" name="lgpd" required> Li e concordo com o <a href="#" target="_blank" rel="noopener">Aviso de Privacidade</a> e autorizo o tratamento dos dados.</label>
+      </div>
+      <div class="field">
+        <label><input type="checkbox" name="veracidade" required> Declaro, sob as penas da lei, que as informações prestadas são verdadeiras.</label>
+      </div>
+
+      <!-- metadados -->
+      <input type="hidden" name="datahora" id="datahora">
+      <input type="hidden" name="origem" value="ouvidoria.html">
+      <!-- honeypot -->
+      <input class="hp" type="text" name="website" autocomplete="off">
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Enviar manifestação</button>
+        <button class="btn" type="reset">Limpar</button>
+      </div>
+
+      <p id="msg" class="msg"></p>
+    </form>
+  </div>
+
+  <script>
+    // data/hora
+    document.getElementById('datahora').value = new Date().toISOString();
+
+    // alterna identificação
+    const radios = document.querySelectorAll('input[name="identificacao"]');
+    const bloco = document.getElementById('bloco-ident');
+    const nome = document.getElementById('nome');
+    const email = document.getElementById('email');
+    function toggleIdent() {
+      const anon = document.querySelector('input[name="identificacao"]:checked').value === 'nao';
+      bloco.style.display = anon ? 'none' : 'grid';
+      nome.required = !anon; email.required = !anon;
+      if (anon) { nome.value=''; email.value=''; }
+    }
+    radios.forEach(r=>r.addEventListener('change',toggleIdent)); toggleIdent();
+
+    // feedback simples (não-AJAX; a resposta vem do PHP)
+  </script>
+</body>
+</html>
